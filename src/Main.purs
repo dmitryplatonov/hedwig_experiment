@@ -1,5 +1,4 @@
 module Main where
-
 import Prelude
 
 import Effect (Effect)
@@ -24,10 +23,10 @@ counterUpdate msg model = case msg of
   Decrement -> model - 1
   Reset -> 0
 
-counter1Lens :: L.Lens Model Model CounterModel CounterModel
+counter1Lens :: L.Lens' Model CounterModel
 counter1Lens = prop (SProxy:: SProxy "counter1")
 
-counter2Lens :: L.Lens Model Model CounterModel CounterModel
+counter2Lens :: L.Lens' Model CounterModel
 counter2Lens = prop (SProxy:: SProxy "counter2")
 
 update :: Model -> Msg -> Model
@@ -36,13 +35,16 @@ update model = case _ of
   Counter2 msg -> L.over counter2Lens (counterUpdate msg) model
 
 view :: Model -> H.Html Msg
-view model = H.main [] [counter Counter1 model.counter1, counter Counter2 model.counter2]
+view model = H.main [] [
+  Counter1 <$> counter model.counter1,
+  Counter2 <$> counter model.counter2
+]
 
-counter :: forall t. (CounterMsg -> t) -> CounterModel -> H.Html t
-counter toMsg model = H.div [] [
-  button [onClick $ toMsg Decrement] [text "-"],
+counter :: CounterModel -> H.Html CounterMsg
+counter model = H.div [] [
+  button [onClick Decrement] [text "-"],
   text (show model),
-  button [onClick $ toMsg Increment] [text "+"]
+  button [onClick Increment] [text "+"]
 ]
 
 main :: Effect Unit
