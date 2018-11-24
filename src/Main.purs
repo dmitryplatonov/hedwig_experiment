@@ -10,12 +10,13 @@ import Data.Symbol (SProxy(..))
 
 type CounterModel = Int
 type Model = { counter1:: CounterModel, counter2:: CounterModel }
+type ModelUpdater = Model -> Model
+data Msg = Msg ModelUpdater
 
 init :: Model
 init = { counter1: 0, counter2: 0 }
 
 data CounterMsg = Increment | Decrement | Reset
-data Msg = Counter1 CounterMsg | Counter2 CounterMsg
 
 counterUpdate :: CounterMsg -> CounterModel -> CounterModel
 counterUpdate msg model = case msg of
@@ -31,13 +32,12 @@ counter2Lens = prop (SProxy:: SProxy "counter2")
 
 update :: Model -> Msg -> Model
 update model = case _ of
-  Counter1 msg -> L.over counter1Lens (counterUpdate msg) model
-  Counter2 msg -> L.over counter2Lens (counterUpdate msg) model
+  Msg transformer -> transformer model
 
 view :: Model -> H.Html Msg
 view model = H.main [] [
-  Counter1 <$> counter model.counter1,
-  Counter2 <$> counter model.counter2
+  (\msg -> Msg (L.over counter1Lens (counterUpdate msg))) <$> counter (L.view counter1Lens model),
+  (\msg -> Msg (L.over counter2Lens (counterUpdate msg))) <$> counter (L.view counter2Lens model)
 ]
 
 counter :: CounterModel -> H.Html CounterMsg
