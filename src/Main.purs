@@ -31,7 +31,7 @@ counter:: (L.Lens' Model Counter.Model) -> Model -> H.Html Msg
 counter lens = Counter.bound Msg lens
 
 view :: Model -> H.Html Msg
-view model = H.main [] $ ((#) model) <$> [
+view model = H.main [] $ (#) model <$> [
   counter counter1Lens,
   counter counter2Lens
 ]
