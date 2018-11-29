@@ -34,10 +34,14 @@ update :: Model -> Msg -> Model
 update model = case _ of
   Msg transformer -> transformer model
 
+boundCounter :: (L.Lens' Model CounterModel) -> Model -> H.Html Msg
+boundCounter lens model =
+  (\msg -> Msg (L.over lens (counterUpdate msg))) <$> counter (L.view lens model)
+
 view :: Model -> H.Html Msg
-view model = H.main [] [
-  (\msg -> Msg (L.over counter1Lens (counterUpdate msg))) <$> counter (L.view counter1Lens model),
-  (\msg -> Msg (L.over counter2Lens (counterUpdate msg))) <$> counter (L.view counter2Lens model)
+view model = H.main [] $ (flip ($) model) <$> [
+  boundCounter counter1Lens,
+  boundCounter counter2Lens
 ]
 
 counter :: CounterModel -> H.Html CounterMsg
