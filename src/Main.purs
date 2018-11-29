@@ -27,6 +27,7 @@ counter model = H.div [] [
 boundCounter :: (L.Lens' Model CounterModel) -> Model -> H.Html Msg
 boundCounter lens model =
   (\msg -> Msg (L.over lens (counterUpdate msg))) <$> counter (L.view lens model)
+
 type Model = { counter1:: CounterModel, counter2:: CounterModel }
 type ModelUpdater = Model -> Model
 data Msg = Msg ModelUpdater
@@ -45,7 +46,7 @@ update model = case _ of
   Msg transformer -> transformer model
 
 view :: Model -> H.Html Msg
-view model = H.main [] $ (flip ($) model) <$> [
+view model = H.main [] $ ((#) model) <$> [
   boundCounter counter1Lens,
   boundCounter counter2Lens
 ]
