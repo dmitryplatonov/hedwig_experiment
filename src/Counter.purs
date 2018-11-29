@@ -24,6 +24,10 @@ view model = H.div [] [
   button [onClick Increment] [text "+"]
 ]
 
-bound :: forall msg appModel. ((appModel -> appModel) -> msg) -> (L.Lens' appModel Model) -> appModel -> H.Html msg
+-- bindComponent v u toMsg lens model =
+--   (\msg -> toMsg $ L.over lens $ u msg) <$> v (L.view lens model)
+
+bound :: forall appMsg appModel. ((appModel -> appModel) -> appMsg) -> (L.Lens' appModel Model) -> appModel -> H.Html appMsg
+-- bound toMsg lens model = bindComponent view update toMsg lens model
 bound toMsg lens model =
   (\msg -> toMsg $ L.over lens $ update msg) <$> view (L.view lens model)
