@@ -7,7 +7,8 @@
     "output"
   ],
   "dependencies": {
-    "purescript-hedwig": "^0.1.1"
+    "purescript-hedwig": "^0.1.1",
+    "purescript-profunctor-lenses": "^5.0.0"
   },
   "devDependencies": {}
 }
