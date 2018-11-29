@@ -5,7 +5,6 @@ import Effect (Effect)
 import Data.Lens as L
 import Data.Lens.Record (prop)
 import Data.Symbol (SProxy(..))
-import Data.Profunctor.Strong (class Strong)
 import Hedwig as H
 import Hedwig ((:>))
 
@@ -28,9 +27,8 @@ update :: Model -> Msg -> Model
 update model = case _ of
   Msg transformer -> transformer model
 
---counter:: (L.Lens' Model Counter.Model) -> Model -> H.Html Msg
---counter:: (forall p. Strong p => p Int Int -> p { counter1 :: Int, counter2 :: Int } { counter1 :: Int , counter2 :: Int }) -> { counter1 :: Int, counter2 :: Int } -> H.Html Msg
-counter = Counter.bound Msg
+counter:: (L.Lens' Model Counter.Model) -> Model -> H.Html Msg
+counter lens = Counter.bound Msg lens
 
 view :: Model -> H.Html Msg
 view model = H.main [] $ ((#) model) <$> [
