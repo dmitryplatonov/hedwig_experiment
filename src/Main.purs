@@ -18,10 +18,10 @@ init :: Model
 init = { counter1: Counter.init, counter2: Counter.init }
 
 counter1Lens :: L.Lens' Model Counter.Model
-counter1Lens = prop (SProxy:: SProxy "counter1")
+counter1Lens = prop $ SProxy:: SProxy "counter1"
 
 counter2Lens :: L.Lens' Model Counter.Model
-counter2Lens = prop (SProxy:: SProxy "counter2")
+counter2Lens = prop $ SProxy:: SProxy "counter2"
 
 update :: Model -> Msg -> Model
 update model = case _ of
