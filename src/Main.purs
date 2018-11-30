@@ -19,18 +19,19 @@ init :: Model
 init = { counter1: Counter.init, counter2: Counter.init }
 
 type ComponentLens model = L.Lens' Model model
+type CounterLens = ComponentLens Counter.Model
 
-counter1Lens :: ComponentLens Counter.Model
+counter1Lens :: CounterLens
 counter1Lens = prop $ SProxy:: SProxy "counter1"
 
-counter2Lens :: ComponentLens Counter.Model
+counter2Lens :: CounterLens
 counter2Lens = prop $ SProxy:: SProxy "counter2"
 
 update :: Update Msg Model
 update msg model = case msg of
   Msg transformer -> transformer model
 
-counter:: (ComponentLens Counter.Model) -> View Msg Model
+counter:: CounterLens -> View Msg Model
 counter lens = Counter.bound Msg lens
 
 view :: View Msg Model
